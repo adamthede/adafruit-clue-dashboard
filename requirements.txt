@@ -1,0 +1,3 @@
+pywebview[cocoa]>=4.0 # Specify cocoa extra for macOS, adjust if needed for other OS
+pyserial>=3.5
+adafruit-io>=2.0
