@@ -1,0 +1,22 @@
+config.ini
+venv/
+*.pyc
+__pycache__/
+dist/
+build/
+*.log
+sensor_data.csv
+*.DS_Store
+.specstory/**
+*.spec
+/old_versions/
+
+# Cursor IDE files
+.cursorindexingignore
+
+# Firmware and bootloader files
+*.uf2
+
+# Adafruit CircuitPython bundles and archives
+*.zip
+adafruit-circuitpython-bundle-*/
