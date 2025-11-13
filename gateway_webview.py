@@ -14,6 +14,8 @@ from collections import deque
 import csv
 from pathlib import Path
 import configparser
+# --- Analysis Engine Import ---
+from analysis_engine import AnalysisEngine
 # --- Adafruit IO Imports --- (Re-enable import)
 try:
     from Adafruit_IO import Client, Feed, RequestError, ThrottlingError
@@ -56,6 +58,7 @@ local_data_store = deque(maxlen=MAX_LOCAL_POINTS)
 current_clue_interval = 30 # Default interval
 initial_aio_status_text = "Unknown"
 initial_aio_status_type = "info"
+analysis_engine = None  # Will be initialized after DATA_FILE is ensured to exist
 
 # --- Setup Logging & Data Directory ---
 log_dir = Path.home() / "Library" / "Logs" / APP_NAME
@@ -649,7 +652,180 @@ class Api:
         except Exception as e:
             log_to_frontend(f"Error during full export process: {e}", 'error')
             logging.exception("Error during full export")
-            return {"success": False, "message": f"Error: {e}"}
+            return {"success": False, "message": f"Error: {e}")
+
+    # --- Analysis Engine API Methods ---
+
+    def get_statistics(self, sensor, time_range=None):
+        """
+        Get statistical summary for a sensor.
+
+        Args:
+            sensor: Sensor name
+            time_range: Optional time range filter (e.g., "1h", "24h", "7d")
+
+        Returns:
+            Dict with statistics
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Computing statistics for {sensor} (range: {time_range})...", 'info')
+        result = analysis_engine.compute_statistics(sensor, time_range)
+        if "error" not in result:
+            log_to_frontend(f"Statistics computed: mean={result.get('mean', 'N/A')}", 'success')
+        return result
+
+    def get_correlation_matrix(self, time_range=None):
+        """
+        Get correlation matrix for all sensors.
+
+        Args:
+            time_range: Optional time range filter
+
+        Returns:
+            Dict with correlation matrix
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Computing correlation matrix (range: {time_range})...", 'info')
+        result = analysis_engine.compute_correlation_matrix(time_range)
+        if "error" not in result:
+            log_to_frontend("Correlation matrix computed successfully.", 'success')
+        return result
+
+    def get_daily_pattern(self, sensor, date):
+        """
+        Get hourly pattern for a specific day.
+
+        Args:
+            sensor: Sensor name
+            date: Date as ISO string (e.g., "2024-06-15")
+
+        Returns:
+            Dict with daily aggregates
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Computing daily pattern for {sensor} on {date}...", 'info')
+        result = analysis_engine.compute_daily_aggregates(sensor, date)
+        if "error" not in result:
+            log_to_frontend("Daily pattern computed successfully.", 'success')
+        return result
+
+    def get_weekly_pattern(self, sensor, weeks_back=4):
+        """
+        Get hourly pattern across week.
+
+        Args:
+            sensor: Sensor name
+            weeks_back: Number of weeks to analyze (default: 4)
+
+        Returns:
+            Dict with weekly pattern (168 data points)
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Computing weekly pattern for {sensor} ({weeks_back} weeks)...", 'info')
+        result = analysis_engine.compute_weekly_pattern(sensor, weeks_back)
+        if "error" not in result:
+            log_to_frontend("Weekly pattern computed successfully.", 'success')
+        return result
+
+    def get_anomalies(self, sensor, threshold=2.5, time_range=None):
+        """
+        Detect and return anomalous readings.
+
+        Args:
+            sensor: Sensor name
+            threshold: Z-score threshold for anomaly detection (default: 2.5)
+            time_range: Optional time range filter
+
+        Returns:
+            Dict with detected anomalies
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Detecting anomalies for {sensor} (threshold: {threshold})...", 'info')
+        result = analysis_engine.detect_anomalies(sensor, threshold, time_range)
+        if "error" not in result:
+            count = result.get('total_count', 0)
+            log_to_frontend(f"Found {count} anomalies.", 'success')
+        return result
+
+    def get_scatter_data(self, sensor_x, sensor_y, time_range=None, max_points=1000):
+        """
+        Get scatter plot data for two sensors.
+
+        Args:
+            sensor_x: X-axis sensor
+            sensor_y: Y-axis sensor
+            time_range: Optional time range filter
+            max_points: Maximum points to return (default: 1000)
+
+        Returns:
+            Dict with scatter plot data
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Computing scatter data: {sensor_x} vs {sensor_y}...", 'info')
+        result = analysis_engine.compute_scatter_data(sensor_x, sensor_y, time_range, max_points)
+        if "error" not in result:
+            count = result.get('count', 0)
+            log_to_frontend(f"Scatter data computed: {count} points.", 'success')
+        return result
+
+    def compare_periods(self, sensor, period1, period2):
+        """
+        Compare statistics between two time periods.
+
+        Args:
+            sensor: Sensor name
+            period1: First time period (e.g., "24h" or dict with start/end)
+            period2: Second time period
+
+        Returns:
+            Dict with comparison statistics
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend(f"Comparing periods for {sensor}...", 'info')
+        result = analysis_engine.compare_periods(sensor, period1, period2)
+        if "error" not in result:
+            log_to_frontend("Period comparison completed.", 'success')
+        return result
+
+    def get_data_summary(self):
+        """
+        Get overall summary of available data.
+
+        Returns:
+            Dict with data summary (date range, record count, sensors)
+        """
+        global analysis_engine
+        if not analysis_engine:
+            return {"error": "Analysis engine not initialized"}
+
+        log_to_frontend("Getting data summary...", 'info')
+        result = analysis_engine.get_data_summary()
+        if "error" not in result:
+            records = result.get('total_records', 0)
+            days = result.get('date_range', {}).get('days', 0)
+            log_to_frontend(f"Data summary: {records} records over {days} days.", 'success')
+        return result
 
 # --- Main Application Setup (Remove Debug Prints) ---
 if __name__ == '__main__':
@@ -664,6 +840,15 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"FATAL: Error setting up directories or logging: {e}") # Keep fatal print
         sys.exit(1)
+
+    # Initialize Analysis Engine
+    try:
+        analysis_engine = AnalysisEngine(csv_filepath=DATA_FILE)
+        logging.info("Analysis Engine initialized successfully")
+    except Exception as e:
+        logging.error(f"Failed to initialize Analysis Engine: {e}")
+        print(f"WARNING: Analysis Engine initialization failed: {e}")
+        # Continue anyway, analysis features will return errors
 
     current_clue_interval = 30
     # print("DEBUG: Creating Api instance...")
