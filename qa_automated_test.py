@@ -30,6 +30,13 @@ except ImportError as e:
     sys.exit(1)
 
 
+# Test data configuration constants
+# Note: Different from test_analysis_engine.py to provide more comprehensive test data
+TEST_RECORD_COUNT = 2000  # Number of test records to generate (14 days of data)
+ANOMALY_FREQUENCY = 200  # Add anomaly every N records (less frequent than unit tests)
+ANOMALY_SPIKE_MAGNITUDE = 15  # Temperature spike for anomalies (°F)
+
+
 class QATestRunner:
     """Automated QA test runner for the Analysis Engine."""
 
@@ -492,8 +499,8 @@ def create_test_data(filepath):
     now = datetime.now(timezone.utc)
     records = []
 
-    # Generate 2000 sample records over 14 days
-    for i in range(2000):
+    # Generate sample records over 14 days
+    for i in range(TEST_RECORD_COUNT):
         timestamp = now - timedelta(days=14) + timedelta(minutes=i * 10)
         hour = timestamp.hour
 
@@ -510,8 +517,8 @@ def create_test_data(filepath):
         }
 
         # Add some anomalies
-        if i % 200 == 0:
-            record['temperature_sht'] += 15
+        if i % ANOMALY_FREQUENCY == 0:
+            record['temperature_sht'] += ANOMALY_SPIKE_MAGNITUDE
 
         records.append(record)
 

@@ -16,6 +16,12 @@ import numpy as np
 from analysis_engine import AnalysisEngine
 
 
+# Test data configuration constants
+TEST_RECORD_COUNT = 1000  # Number of test records to generate
+ANOMALY_FREQUENCY = 100  # Add anomaly every N records
+ANOMALY_SPIKE_MAGNITUDE = 15  # Temperature spike for anomalies (°F)
+
+
 def create_test_data(filepath):
     """Create test CSV data if no data exists."""
     print(f"Creating test data at {filepath}...")
@@ -24,8 +30,8 @@ def create_test_data(filepath):
     now = datetime.now(timezone.utc)
     records = []
 
-    # Generate 1000 sample records over 7 days
-    for i in range(1000):
+    # Generate sample records over 7 days
+    for i in range(TEST_RECORD_COUNT):
         timestamp = now - timedelta(days=7) + timedelta(minutes=i * 10)
 
         # Create realistic sensor patterns
@@ -43,8 +49,8 @@ def create_test_data(filepath):
         }
 
         # Add some anomalies
-        if i % 100 == 0:
-            record['temperature_sht'] += 15  # Anomalous spike
+        if i % ANOMALY_FREQUENCY == 0:
+            record['temperature_sht'] += ANOMALY_SPIKE_MAGNITUDE  # Anomalous spike
 
         records.append(record)
 

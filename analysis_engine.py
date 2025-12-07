@@ -53,6 +53,12 @@ class AnalysisEngine:
         "all": None  # Special case for all data
     }
 
+    # Cache configuration
+    CACHE_TIMEOUT_SECONDS = 300  # 5 minutes cache timeout
+
+    # Random state for reproducible sampling
+    RANDOM_STATE = 42  # For consistent test results and reproducibility
+
     def __init__(self, csv_filepath: Union[str, Path]):
         """
         Initialize the Analysis Engine.
@@ -62,7 +68,7 @@ class AnalysisEngine:
         """
         self.csv_filepath = Path(csv_filepath)
         self._cache = {}
-        self._cache_timeout = 300  # 5 minutes cache timeout
+        self._cache_timeout = self.CACHE_TIMEOUT_SECONDS
         self._cache_timestamps = {}
 
         # Setup logging
@@ -569,7 +575,7 @@ class AnalysisEngine:
 
         # Sample if too many points
         if len(clean_df) > max_points:
-            clean_df = clean_df.sample(n=max_points, random_state=42)
+            clean_df = clean_df.sample(n=max_points, random_state=self.RANDOM_STATE)
             self.logger.info(f"Sampled {max_points} points from {len(df)} for scatter plot")
 
         # Create scatter data
