@@ -1,0 +1,386 @@
+{
+  "workday_pulse": [
+    {
+      "hour": 0,
+      "sound_median": 8.0,
+      "sound_std": 51.07024859277393,
+      "light_median": 2.0
+    },
+    {
+      "hour": 1,
+      "sound_median": 8.0,
+      "sound_std": 43.10543681013134,
+      "light_median": 2.0
+    },
+    {
+      "hour": 2,
+      "sound_median": 8.0,
+      "sound_std": 44.48822699010856,
+      "light_median": 2.0
+    },
+    {
+      "hour": 3,
+      "sound_median": 8.0,
+      "sound_std": 39.39792638994751,
+      "light_median": 2.0
+    },
+    {
+      "hour": 4,
+      "sound_median": 8.0,
+      "sound_std": 41.992517214587465,
+      "light_median": 2.0
+    },
+    {
+      "hour": 5,
+      "sound_median": 8.0,
+      "sound_std": 38.68878215650723,
+      "light_median": 20.0
+    },
+    {
+      "hour": 6,
+      "sound_median": 9.0,
+      "sound_std": 44.484995712416186,
+      "light_median": 124.0
+    },
+    {
+      "hour": 7,
+      "sound_median": 9.0,
+      "sound_std": 52.06168398209229,
+      "light_median": 302.0
+    },
+    {
+      "hour": 8,
+      "sound_median": 9.0,
+      "sound_std": 51.85747330192685,
+      "light_median": 451.0
+    },
+    {
+      "hour": 9,
+      "sound_median": 8.0,
+      "sound_std": 41.54776126197374,
+      "light_median": 579.0
+    },
+    {
+      "hour": 10,
+      "sound_median": 9.0,
+      "sound_std": 59.760377242137245,
+      "light_median": 762.0
+    },
+    {
+      "hour": 11,
+      "sound_median": 9.0,
+      "sound_std": 67.94464948074618,
+      "light_median": 921.0
+    },
+    {
+      "hour": 12,
+      "sound_median": 10.0,
+      "sound_std": 49.93109060291551,
+      "light_median": 990.0
+    },
+    {
+      "hour": 13,
+      "sound_median": 9.0,
+      "sound_std": 53.34374524658306,
+      "light_median": 922.0
+    },
+    {
+      "hour": 14,
+      "sound_median": 9.0,
+      "sound_std": 60.2233917121146,
+      "light_median": 868.0
+    },
+    {
+      "hour": 15,
+      "sound_median": 10.0,
+      "sound_std": 58.820365639578746,
+      "light_median": 683.0
+    },
+    {
+      "hour": 16,
+      "sound_median": 9.0,
+      "sound_std": 67.50505440717887,
+      "light_median": 529.5
+    },
+    {
+      "hour": 17,
+      "sound_median": 9.0,
+      "sound_std": 61.48824207246532,
+      "light_median": 305.0
+    },
+    {
+      "hour": 18,
+      "sound_median": 9.0,
+      "sound_std": 51.448561744741816,
+      "light_median": 131.0
+    },
+    {
+      "hour": 19,
+      "sound_median": 9.0,
+      "sound_std": 56.24754690671726,
+      "light_median": 96.0
+    },
+    {
+      "hour": 20,
+      "sound_median": 9.0,
+      "sound_std": 52.81299358336873,
+      "light_median": 47.0
+    },
+    {
+      "hour": 21,
+      "sound_median": 9.0,
+      "sound_std": 52.650486575588346,
+      "light_median": 6.0
+    },
+    {
+      "hour": 22,
+      "sound_median": 8.0,
+      "sound_std": 46.00500845927892,
+      "light_median": 2.0
+    },
+    {
+      "hour": 23,
+      "sound_median": 8.0,
+      "sound_std": 43.14501710171864,
+      "light_median": 2.0
+    }
+  ],
+  "seasonal_light": [
+    {
+      "month": "2025-04",
+      "peak_hour": 13.116666666666667
+    },
+    {
+      "month": "2025-05",
+      "peak_hour": 13.433333333333334
+    },
+    {
+      "month": "2025-06",
+      "peak_hour": 9.708333333333332
+    },
+    {
+      "month": "2025-07",
+      "peak_hour": 14.966666666666667
+    },
+    {
+      "month": "2025-08",
+      "peak_hour": 12.0
+    },
+    {
+      "month": "2025-09",
+      "peak_hour": 12.083333333333334
+    },
+    {
+      "month": "2025-10",
+      "peak_hour": 11.95
+    },
+    {
+      "month": "2025-11",
+      "peak_hour": 10.525
+    },
+    {
+      "month": "2025-12",
+      "peak_hour": 11.841666666666667
+    },
+    {
+      "month": "2026-02",
+      "peak_hour": 12.241666666666667
+    }
+  ],
+  "thermal_profile": [
+    {
+      "hour": 0,
+      "temperature_sht": 84.88665451077199
+    },
+    {
+      "hour": 1,
+      "temperature_sht": 84.69161089538602
+    },
+    {
+      "hour": 2,
+      "temperature_sht": 84.6957533383002
+    },
+    {
+      "hour": 3,
+      "temperature_sht": 84.72425782142042
+    },
+    {
+      "hour": 4,
+      "temperature_sht": 84.56254707173386
+    },
+    {
+      "hour": 5,
+      "temperature_sht": 84.35597519072856
+    },
+    {
+      "hour": 6,
+      "temperature_sht": 84.48180751312142
+    },
+    {
+      "hour": 7,
+      "temperature_sht": 84.62042795071723
+    },
+    {
+      "hour": 8,
+      "temperature_sht": 84.57909992413569
+    },
+    {
+      "hour": 9,
+      "temperature_sht": 84.70952468501595
+    },
+    {
+      "hour": 10,
+      "temperature_sht": 85.10671532444641
+    },
+    {
+      "hour": 11,
+      "temperature_sht": 85.19200269396552
+    },
+    {
+      "hour": 12,
+      "temperature_sht": 85.19591590474165
+    },
+    {
+      "hour": 13,
+      "temperature_sht": 85.40997929606625
+    },
+    {
+      "hour": 14,
+      "temperature_sht": 85.50348063856819
+    },
+    {
+      "hour": 15,
+      "temperature_sht": 85.43036768802229
+    },
+    {
+      "hour": 16,
+      "temperature_sht": 85.95829876485668
+    },
+    {
+      "hour": 17,
+      "temperature_sht": 86.02687115443193
+    },
+    {
+      "hour": 18,
+      "temperature_sht": 85.83129162285314
+    },
+    {
+      "hour": 19,
+      "temperature_sht": 85.9301208576998
+    },
+    {
+      "hour": 20,
+      "temperature_sht": 85.82138613293571
+    },
+    {
+      "hour": 21,
+      "temperature_sht": 85.73012413558554
+    },
+    {
+      "hour": 22,
+      "temperature_sht": 85.40079147131057
+    },
+    {
+      "hour": 23,
+      "temperature_sht": 85.44237115127176
+    }
+  ],
+  "sound_floor": [
+    {
+      "month": "2025-04",
+      "sound_floor": 4.0
+    },
+    {
+      "month": "2025-05",
+      "sound_floor": 4.0
+    },
+    {
+      "month": "2025-06",
+      "sound_floor": 4.0
+    },
+    {
+      "month": "2025-07",
+      "sound_floor": 5.0
+    },
+    {
+      "month": "2025-08",
+      "sound_floor": 6.0
+    },
+    {
+      "month": "2025-09",
+      "sound_floor": 5.0
+    },
+    {
+      "month": "2025-10",
+      "sound_floor": 5.0
+    },
+    {
+      "month": "2025-11",
+      "sound_floor": 4.0
+    },
+    {
+      "month": "2025-12",
+      "sound_floor": 4.0
+    },
+    {
+      "month": "2026-02",
+      "sound_floor": 5.0
+    },
+    {
+      "month": "2026-04",
+      "sound_floor": 3.9000000000000004
+    }
+  ],
+  "monthly_colors": [
+    {
+      "month": "2025-04",
+      "color_hex": "#39241C"
+    },
+    {
+      "month": "2025-05",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2025-06",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2025-07",
+      "color_hex": "#010101"
+    },
+    {
+      "month": "2025-08",
+      "color_hex": "#090505"
+    },
+    {
+      "month": "2025-09",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2025-10",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2025-11",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2025-12",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2026-02",
+      "color_hex": "#FFFFFF"
+    },
+    {
+      "month": "2026-04",
+      "color_hex": "#000000"
+    }
+  ],
+  "meta": {
+    "row_count": 425575,
+    "start_date": "2025-04-06T18:05:37.257313+00:00",
+    "end_date": "2026-04-22T20:48:08.125292+00:00",
+    "inferred_offset": -6
+  }
+}

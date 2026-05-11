@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Office Pulse Dashboard</title>
+  <style>
+    :root {
+      --bg: #1c1917;
+      --panel: #292524;
+      --panel-soft: #231f1d;
+      --text: #f5f5f4;
+      --muted: #d6d3d1;
+      --subtle: #a8a29e;
+      --grid: #44403c;
+      --orange: #FF8F3B;
+      --orange-soft: #FDAD57;
+      --orange-pale: #FFCE9D;
+      --amber: #f59e0b;
+      --teal: #14b8a6;
+      --rose: #fb7185;
+      --emerald: #34d399;
+      --cyan: #22d3ee;
+      --indigo: #818cf8;
+      --purple: #c084fc;
+      --gray: #78716c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      line-height: 1.45;
+    }
+    .page {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 40px 28px 64px;
+    }
+    .eyebrow {
+      color: var(--orange-pale);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(40px, 7vw, 88px);
+      line-height: 0.96;
+      font-weight: 400;
+      max-width: 10ch;
+    }
+    .subtitle {
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 17px;
+      margin-top: 18px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 2.1fr 1fr;
+      gap: 24px;
+      align-items: end;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--grid);
+    }
+    .headline-card {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .headline-stat {
+      font-size: clamp(68px, 14vw, 164px);
+      line-height: 0.9;
+      font-weight: 300;
+      color: var(--text);
+    }
+    .headline-unit {
+      color: var(--orange-soft);
+      font-size: clamp(20px, 3vw, 32px);
+      margin-left: 6px;
+    }
+    .headline-label {
+      margin-top: 8px;
+      color: var(--orange-pale);
+      font-size: 14px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+    .kpi {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 14px 16px 16px;
+      min-height: 110px;
+    }
+    .kpi-label {
+      color: var(--subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+    }
+    .kpi-value {
+      font-size: 44px;
+      line-height: 1;
+      margin-top: 10px;
+    }
+    .kpi-unit {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .section {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 28px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--grid);
+    }
+    .section-meta {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+    }
+    .section-index {
+      color: var(--orange-soft);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.05;
+    }
+    .section p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .viz-wrap {
+      display: grid;
+      gap: 18px;
+    }
+    .viz {
+      background: var(--panel-soft);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 16px;
+      min-height: 320px;
+    }
+    .finding {
+      color: var(--text);
+      font-size: 17px;
+      max-width: 72ch;
+    }
+    .method {
+      color: var(--subtle);
+      font-size: 13px;
+      max-width: 74ch;
+    }
+    .footer {
+      padding-top: 26px;
+      color: var(--muted);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 14px;
+    }
+    .footer-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 16px;
+    }
+    .footer-card h3 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--orange-pale);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    .footer-card p, .footer-card li {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .footer-card ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .pill {
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .table th, .table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+      vertical-align: top;
+    }
+    .table th {
+      color: var(--orange-pale);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section { grid-template-columns: 1fr; }
+      .section-meta { position: static; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .page { padding: 24px 16px 42px; }
+      .kpi-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app"></div>
+  <script>
+    const data = {"meta":{"title":"Office Pulse","subtitle":"Adafruit CLUE office environment, joined to Nashville hourly weather in America/Chicago local time unless noted.","headline_value":4.3,"headline_unit":"hours","headline_label":"seasonal drift in the brightest hour of the room","kpis":[{"label":"Active Dates","value":224,"unit":"of 382 calendar days"},{"label":"Median Cadence","value":29.9,"unit":"seconds"},{"label":"Median Temperature","value":85.5,"unit":"deg F"},{"label":"Outages > 1 hour","value":29,"unit":"gaps"}]},"schema":[{"name":"gw_timestamp","null_rate":0.0,"unique_nonnull":425650,"examples":["2025-04-07T00:05:37.257313+00:00","2025-04-07T00:05:44.665706+00:00","2025-04-07T00:05:52.059329+00:00"],"type":"datetime","date_min":"2025-04-07T00:05:37.257313+00:00","date_max":"2026-04-23T02:48:08.125292+00:00"},{"name":"timestamp_monotonic","null_rate":0.0,"unique_nonnull":373208,"examples":["551.3","556.39","561.46"],"type":"numeric","min":4.0,"max":4579050.0},{"name":"timestamp_iso","null_rate":99.999,"unique_nonnull":3,"examples":["7.0","0.0","8.0"],"type":"categorical"},{"name":"temperature_sht","null_rate":0.023,"unique_nonnull":1105,"examples":["89.82","89.83","89.83"],"type":"numeric","min":69.8,"max":99.3},{"name":"humidity","null_rate":0.021,"unique_nonnull":2701,"examples":["32.21","32.15","32.19"],"type":"numeric","min":14.19,"max":43.74},{"name":"pressure","null_rate":0.006,"unique_nonnull":3062,"examples":["993.02","993.02","993.03"],"type":"numeric","min":72.0,"max":1018.9},{"name":"light","null_rate":0.013,"unique_nonnull":12342,"examples":["4360.0","4356.0","4357.0"],"type":"numeric","min":0.0,"max":5061000.4},{"name":"sound_level","null_rate":0.004,"unique_nonnull":732,"examples":["41.0","39.0","94.0"],"type":"numeric","min":2.0,"max":2799.0},{"name":"color_hex","null_rate":0.028,"unique_nonnull":87286,"examples":["#9B5650","#9B5650","#9B5650"],"type":"categorical"}],"sections":{"seasonal_light":[{"month":"2025-04","peak_hour":14.116666666666667,"bright_span_h":6.723703743888889,"peak_light":2351.0,"days":25},{"month":"2025-05","peak_hour":14.433333333333334,"bright_span_h":7.635918546666666,"peak_light":1847.0,"days":31},{"month":"2025-06","peak_hour":10.15,"bright_span_h":3.955818620277778,"peak_light":7934.0,"days":23},{"month":"2025-07","peak_hour":14.208333333333332,"bright_span_h":5.328753558333333,"peak_light":1701.0,"days":24},{"month":"2025-08","peak_hour":13.233333333333333,"bright_span_h":4.476737983055556,"peak_light":1602.0,"days":29},{"month":"2025-09","peak_hour":13.083333333333334,"bright_span_h":3.71485514,"peak_light":4084.0,"days":25},{"month":"2025-10","peak_hour":14.5,"bright_span_h":4.969477640833333,"peak_light":6319.5,"days":18},{"month":"2025-11","peak_hour":10.616666666666667,"bright_span_h":4.714717733750001,"peak_light":44538.0,"days":14},{"month":"2025-12","peak_hour":11.841666666666667,"bright_span_h":3.063018916388889,"peak_light":18258.5,"days":14},{"month":"2026-02","peak_hour":12.241666666666667,"bright_span_h":1.4937810751388887,"peak_light":38072.5,"days":2}],"activity_profile":[{"hour":0,"quiet_light":2.0,"quiet_sound":7.0,"quiet_temp":85.14,"active_light":10.0,"active_sound":10.0,"active_temp":87.3},{"hour":1,"quiet_light":2.0,"quiet_sound":6.0,"quiet_temp":85.17,"active_light":24.0,"active_sound":19.0,"active_temp":85.32},{"hour":2,"quiet_light":1.0,"quiet_sound":6.0,"quiet_temp":85.51,"active_light":140.0,"active_sound":11.0,"active_temp":85.8},{"hour":3,"quiet_light":1.0,"quiet_sound":6.0,"quiet_temp":85.44,"active_light":40.5,"active_sound":11.0,"active_temp":86.49},{"hour":4,"quiet_light":1.0,"quiet_sound":6.0,"quiet_temp":85.33,"active_light":28.0,"active_sound":13.0,"active_temp":86.47},{"hour":5,"quiet_light":1.0,"quiet_sound":7.0,"quiet_temp":85.01,"active_light":7.0,"active_sound":12.0,"active_temp":85.69},{"hour":6,"quiet_light":3.0,"quiet_sound":7.0,"quiet_temp":84.74,"active_light":143.0,"active_sound":11.0,"active_temp":86.31},{"hour":7,"quiet_light":54.0,"quiet_sound":7.0,"quiet_temp":84.43,"active_light":497.0,"active_sound":15.0,"active_temp":86.31},{"hour":8,"quiet_light":127.5,"quiet_sound":7.0,"quiet_temp":85.01,"active_light":670.0,"active_sound":20.0,"active_temp":85.93},{"hour":9,"quiet_light":57.0,"quiet_sound":8.0,"quiet_temp":84.94,"active_light":958.0,"active_sound":11.0,"active_temp":85.91},{"hour":10,"quiet_light":54.0,"quiet_sound":7.0,"quiet_temp":85.03,"active_light":1030.5,"active_sound":9.0,"active_temp":86.25},{"hour":11,"quiet_light":215.0,"quiet_sound":7.0,"quiet_temp":85.42,"active_light":1520.5,"active_sound":10.0,"active_temp":86.92},{"hour":12,"quiet_light":394.0,"quiet_sound":7.0,"quiet_temp":84.52,"active_light":1853.0,"active_sound":16.0,"active_temp":86.54},{"hour":13,"quiet_light":143.0,"quiet_sound":7.0,"quiet_temp":84.22,"active_light":2007.5,"active_sound":76.0,"active_temp":85.62},{"hour":14,"quiet_light":181.0,"quiet_sound":7.0,"quiet_temp":84.87,"active_light":1498.0,"active_sound":28.0,"active_temp":85.57},{"hour":15,"quiet_light":234.0,"quiet_sound":8.0,"quiet_temp":85.68,"active_light":1230.0,"active_sound":13.0,"active_temp":85.57},{"hour":16,"quiet_light":278.5,"quiet_sound":8.0,"quiet_temp":85.48,"active_light":859.0,"active_sound":11.0,"active_temp":85.87},{"hour":17,"quiet_light":147.5,"quiet_sound":7.0,"quiet_temp":85.62,"active_light":684.0,"active_sound":13.0,"active_temp":86.7},{"hour":18,"quiet_light":98.0,"quiet_sound":8.0,"quiet_temp":84.7,"active_light":342.0,"active_sound":22.0,"active_temp":86.23},{"hour":19,"quiet_light":101.0,"quiet_sound":7.0,"quiet_temp":84.2,"active_light":83.0,"active_sound":12.0,"active_temp":85.71000000000001},{"hour":20,"quiet_light":98.0,"quiet_sound":7.0,"quiet_temp":85.03,"active_light":62.0,"active_sound":12.0,"active_temp":86.43},{"hour":21,"quiet_light":34.0,"quiet_sound":8.0,"quiet_temp":84.43,"active_light":43.0,"active_sound":11.0,"active_temp":86.41},{"hour":22,"quiet_light":3.0,"quiet_sound":7.0,"quiet_temp":84.92,"active_light":41.0,"active_sound":13.0,"active_temp":86.29},{"hour":23,"quiet_light":2.0,"quiet_sound":7.0,"quiet_temp":84.22,"active_light":3.0,"active_sound":10.0,"active_temp":86.47}],"activity_class_counts":{"middle":112,"quiet":56,"active":56},"lag_profile":[{"lag_hours":-12,"correlation":-0.10213329314841033},{"lag_hours":-11,"correlation":-0.10998411716753524},{"lag_hours":-10,"correlation":-0.11827306998156073},{"lag_hours":-9,"correlation":-0.12197738425778705},{"lag_hours":-8,"correlation":-0.12236910483793026},{"lag_hours":-7,"correlation":-0.1213995322921361},{"lag_hours":-6,"correlation":-0.11394185845797429},{"lag_hours":-5,"correlation":-0.10236081226688024},{"lag_hours":-4,"correlation":-0.08895797807989565},{"lag_hours":-3,"correlation":-0.06592754394350411},{"lag_hours":-2,"correlation":-0.039293288484676},{"lag_hours":-1,"correlation":-0.007733363520055243},{"lag_hours":0,"correlation":0.03745968337049327},{"lag_hours":1,"correlation":0.06543923024642002},{"lag_hours":2,"correlation":0.07597551238230209},{"lag_hours":3,"correlation":0.08191240351162651},{"lag_hours":4,"correlation":0.08880313504442373},{"lag_hours":5,"correlation":0.0886683757546336},{"lag_hours":6,"correlation":0.08540784733834332},{"lag_hours":7,"correlation":0.0807012902512114},{"lag_hours":8,"correlation":0.07266700598005597},{"lag_hours":9,"correlation":0.059822930993772394},{"lag_hours":10,"correlation":0.0460823358826984},{"lag_hours":11,"correlation":0.03405345521504948},{"lag_hours":12,"correlation":0.02051717170181015}],"typical_day":[{"hour":0,"light_median":2.0,"temp_median":85.8},{"hour":1,"light_median":2.0,"temp_median":85.26},{"hour":2,"light_median":2.0,"temp_median":85.37},{"hour":3,"light_median":2.0,"temp_median":85.69},{"hour":4,"light_median":2.0,"temp_median":85.44},{"hour":5,"light_median":2.0,"temp_median":85.19},{"hour":6,"light_median":24.0,"temp_median":85.17},{"hour":7,"light_median":159.0,"temp_median":85.32},{"hour":8,"light_median":344.0,"temp_median":85.32},{"hour":9,"light_median":452.5,"temp_median":84.87},{"hour":10,"light_median":598.0,"temp_median":84.92},{"hour":11,"light_median":771.0,"temp_median":85.73},{"hour":12,"light_median":944.5,"temp_median":85.86},{"hour":13,"light_median":1008.0,"temp_median":85.44},{"hour":14,"light_median":918.0,"temp_median":85.55},{"hour":15,"light_median":841.0,"temp_median":85.62},{"hour":16,"light_median":630.0,"temp_median":85.42},{"hour":17,"light_median":468.0,"temp_median":85.91},{"hour":18,"light_median":279.0,"temp_median":85.98},{"hour":19,"light_median":149.0,"temp_median":85.57},{"hour":20,"light_median":97.0,"temp_median":85.91},{"hour":21,"light_median":44.0,"temp_median":85.95},{"hour":22,"light_median":4.0,"temp_median":85.91},{"hour":23,"light_median":2.0,"temp_median":85.59}],"color_modes":[{"month":"2025-04","dark_share":0.5072695318741013,"warm_share":0.35939358434964763,"cool_share":0.0051303900161545155,"neutral_share":0.12820649376009657,"dominant_color":"#9A564E","mean_brightness":54.45267555460877},{"month":"2025-05","dark_share":0.4725110718167513,"warm_share":0.3504858621416868,"cool_share":0.0005028957059195692,"neutral_share":0.17650017033564233,"dominant_color":"#BC937A","mean_brightness":57.21380097226503},{"month":"2025-06","dark_share":0.40699409733823366,"warm_share":0.08009800645951665,"cool_share":0.0016260162601626016,"neutral_share":0.5112818799420871,"dominant_color":"#FEFDFD","mean_brightness":103.8583583918031},{"month":"2025-07","dark_share":0.4931528274999131,"warm_share":0.1687810642661013,"cool_share":5.213583121893573e-05,"neutral_share":0.33801397240276665,"dominant_color":"#000000","mean_brightness":45.51027655162026},{"month":"2025-08","dark_share":0.5074597436740059,"warm_share":0.159250739401906,"cool_share":0.0,"neutral_share":0.3332895169240881,"dominant_color":"#181618","mean_brightness":44.370538941833715},{"month":"2025-09","dark_share":0.5335703217573603,"warm_share":0.11973384376993892,"cool_share":0.0005833561206817975,"neutral_share":0.34611247835201897,"dominant_color":"#000000","mean_brightness":69.99256828608756},{"month":"2025-10","dark_share":0.5471790052556472,"warm_share":0.06303296091329923,"cool_share":0.0069611221328878215,"neutral_share":0.38282691169816574,"dominant_color":"#000000","mean_brightness":71.27324724745628},{"month":"2025-11","dark_share":0.5943784023997334,"warm_share":0.08528681998296486,"cool_share":0.00896196718883087,"neutral_share":0.3113728104284709,"dominant_color":"#766D5D","mean_brightness":64.9628559789653},{"month":"2025-12","dark_share":0.6187117552334943,"warm_share":0.03874396135265701,"cool_share":0.016972624798711755,"neutral_share":0.32557165861513687,"dominant_color":"#FFFFFF","mean_brightness":64.1323564143854},{"month":"2026-02","dark_share":0.6111535523300229,"warm_share":0.0,"cool_share":0.06302521008403361,"neutral_share":0.32582123758594345,"dominant_color":"#FFFFFF","mean_brightness":87.91151005856888},{"month":"2026-04","dark_share":1.0,"warm_share":0.0,"cool_share":0.0,"neutral_share":0.0,"dominant_color":"#000000","mean_brightness":0.0}],"discomfort_by_hour":[{"hour":0,"discomfort_p95":2.085000000000001,"temperature_p95":91.42,"humidity_p05":24.02,"sound_p95":121.0},{"hour":1,"discomfort_p95":2.1499999999999986,"temperature_p95":91.31,"humidity_p05":23.304000000000002,"sound_p95":130.0},{"hour":2,"discomfort_p95":2.085000000000001,"temperature_p95":90.37,"humidity_p05":23.356,"sound_p95":121.0},{"hour":3,"discomfort_p95":2.2299999999999995,"temperature_p95":90.95,"humidity_p05":22.52,"sound_p95":118.0},{"hour":4,"discomfort_p95":2.1400000000000006,"temperature_p95":90.09,"humidity_p05":22.71,"sound_p95":117.0},{"hour":5,"discomfort_p95":2.231999999999989,"temperature_p95":90.25799999999995,"humidity_p05":22.88,"sound_p95":115.0},{"hour":6,"discomfort_p95":2.2150000000000034,"temperature_p95":90.39,"humidity_p05":22.98,"sound_p95":116.0},{"hour":7,"discomfort_p95":2.2650000000000006,"temperature_p95":90.7,"humidity_p05":23.04,"sound_p95":123.0},{"hour":8,"discomfort_p95":1.9600000000000009,"temperature_p95":90.80099999999999,"humidity_p05":24.7945,"sound_p95":130.0},{"hour":9,"discomfort_p95":1.9600000000000009,"temperature_p95":90.75,"humidity_p05":23.53,"sound_p95":127.0},{"hour":10,"discomfort_p95":2.0349999999999966,"temperature_p95":90.99,"humidity_p05":23.5515,"sound_p95":121.0},{"hour":11,"discomfort_p95":2.2950000000000017,"temperature_p95":90.81,"humidity_p05":22.94,"sound_p95":120.0},{"hour":12,"discomfort_p95":2.280000000000001,"temperature_p95":91.29,"humidity_p05":22.23,"sound_p95":127.0},{"hour":13,"discomfort_p95":2.2182499999999896,"temperature_p95":91.65,"humidity_p05":22.07,"sound_p95":127.0},{"hour":14,"discomfort_p95":2.2150000000000034,"temperature_p95":91.0,"humidity_p05":22.09,"sound_p95":139.0},{"hour":15,"discomfort_p95":2.3049999999999997,"temperature_p95":92.05,"humidity_p05":22.1,"sound_p95":136.0},{"hour":16,"discomfort_p95":2.395000000000003,"temperature_p95":92.53,"humidity_p05":22.211000000000002,"sound_p95":135.0},{"hour":17,"discomfort_p95":2.5,"temperature_p95":92.48,"humidity_p05":22.607000000000003,"sound_p95":141.0},{"hour":18,"discomfort_p95":2.4450000000000003,"temperature_p95":92.52,"humidity_p05":21.91,"sound_p95":149.0},{"hour":19,"discomfort_p95":2.4099999999999966,"temperature_p95":91.67,"humidity_p05":21.82,"sound_p95":135.0},{"hour":20,"discomfort_p95":2.354999999999997,"temperature_p95":91.94,"humidity_p05":22.3,"sound_p95":138.0},{"hour":21,"discomfort_p95":2.372749999999997,"temperature_p95":91.62,"humidity_p05":23.82,"sound_p95":139.0},{"hour":22,"discomfort_p95":2.229999999999997,"temperature_p95":91.36,"humidity_p05":24.57,"sound_p95":132.0},{"hour":23,"discomfort_p95":2.049999999999997,"temperature_p95":91.18,"humidity_p05":23.8915,"sound_p95":126.0}],"discomfort_days":[{"local_date":"2025-07-06","discomfort_p95":13.371749999999995,"temp_max":91.74,"humidity_min":28.22,"sound_p95":534.25},{"local_date":"2025-12-15","discomfort_p95":7.65,"temp_max":79.45,"humidity_min":14.19,"sound_p95":23.0},{"local_date":"2025-12-14","discomfort_p95":6.448499999999998,"temp_max":83.79,"humidity_min":15.29,"sound_p95":119.84999999999991},{"local_date":"2025-12-16","discomfort_p95":6.130000000000001,"temp_max":82.29,"humidity_min":15.7,"sound_p95":25.0},{"local_date":"2025-08-05","discomfort_p95":4.8825,"temp_max":92.17,"humidity_min":22.49,"sound_p95":266.75},{"local_date":"2025-06-07","discomfort_p95":4.367999999999997,"temp_max":89.51,"humidity_min":25.38,"sound_p95":258.9},{"local_date":"2025-12-17","discomfort_p95":4.010000000000002,"temp_max":81.81,"humidity_min":17.71,"sound_p95":37.69999999999982},{"local_date":"2025-06-02","discomfort_p95":3.835000000000001,"temp_max":95.86,"humidity_min":26.67,"sound_p95":109.84999999999991}],"anomaly_events":[{"start":"2025-11-13T01:00:00-06:00","end":"2025-11-13T04:00:00-06:00","duration_h":4.0,"score":323.9733733767162,"peak_light":65535.0,"peak_sound":31.799999999999983,"min_humidity":20.115,"temp_span":10.054999999999993,"label":"extreme brightness, fast temperature swing"},{"start":"2025-12-20T11:00:00-06:00","end":"2025-12-20T12:00:00-06:00","duration_h":2.0,"score":119.85739616772808,"peak_light":23590.5,"peak_sound":18.0,"min_humidity":19.545,"temp_span":0.1599999999999966,"label":"extreme brightness"},{"start":"2025-12-21T10:00:00-06:00","end":"2025-12-21T12:00:00-06:00","duration_h":3.0,"score":111.93369807875013,"peak_light":21721.0,"peak_sound":22.049999999999997,"min_humidity":19.39,"temp_span":2.3299999999999983,"label":"extreme brightness"},{"start":"2026-02-17T10:00:00-06:00","end":"2026-02-17T11:00:00-06:00","duration_h":2.0,"score":103.3015144994329,"peak_light":20889.0,"peak_sound":19.0,"min_humidity":27.34,"temp_span":0.7399999999999949,"label":"extreme brightness"},{"start":"2025-08-22T16:00:00-05:00","end":"2025-08-22T17:00:00-05:00","duration_h":2.0,"score":76.22616466482025,"peak_light":797.5,"peak_sound":1186.0,"min_humidity":28.0,"temp_span":4.0649999999999835,"label":"sound spike"},{"start":"2025-11-09T16:00:00-06:00","end":"2025-11-09T16:00:00-06:00","duration_h":1.0,"score":71.67827106465661,"peak_light":13797.0,"peak_sound":23.0,"min_humidity":35.88,"temp_span":0.0,"label":"extreme brightness"},{"start":"2025-12-15T11:00:00-06:00","end":"2025-12-15T12:00:00-06:00","duration_h":2.0,"score":71.05474285334714,"peak_light":12399.0,"peak_sound":28.0,"min_humidity":15.78,"temp_span":0.4099999999999966,"label":"extreme brightness, very dry air"},{"start":"2025-12-17T13:00:00-06:00","end":"2025-12-17T13:00:00-06:00","duration_h":1.0,"score":70.08471295839864,"peak_light":13605.0,"peak_sound":31.0,"min_humidity":22.45,"temp_span":0.0,"label":"extreme brightness"},{"start":"2025-10-22T12:00:00-05:00","end":"2025-10-22T12:00:00-05:00","duration_h":1.0,"score":69.65956017337182,"peak_light":13675.0,"peak_sound":19.0,"min_humidity":23.25,"temp_span":0.0,"label":"extreme brightness"},{"start":"2025-06-06T18:00:00-05:00","end":"2025-06-06T19:00:00-05:00","duration_h":2.0,"score":66.6290332467953,"peak_light":11647.0,"peak_sound":157.10000000000002,"min_humidity":26.625,"temp_span":0.7150000000000034,"label":"extreme brightness"}],"routine":[{"month":"2025-04","active_hours_per_day":14.540447504302925,"light_median":242.0,"sound_p75":48.29999999999998,"temp_median":84.58,"sampled_hours":569},{"month":"2025-05","active_hours_per_day":14.870967741935484,"light_median":298.75,"sound_p75":114.89999999999999,"temp_median":85.17,"sampled_hours":686},{"month":"2025-06","active_hours_per_day":12.566666666666666,"light_median":321.0,"sound_p75":135.05,"temp_median":87.49,"sampled_hours":525},{"month":"2025-07","active_hours_per_day":15.161290322580644,"light_median":108.5,"sound_p75":129.6375,"temp_median":86.99,"sampled_hours":646},{"month":"2025-08","active_hours_per_day":18.774193548387096,"light_median":106.25,"sound_p75":160.0,"temp_median":87.1,"sampled_hours":722},{"month":"2025-09","active_hours_per_day":15.2,"light_median":48.0,"sound_p75":122.79999999999998,"temp_median":86.07,"sampled_hours":649},{"month":"2025-10","active_hours_per_day":9.096774193548388,"light_median":53.5,"sound_p75":24.799999999999983,"temp_median":82.76,"sampled_hours":533},{"month":"2025-11","active_hours_per_day":5.5256588072122055,"light_median":116.0,"sound_p75":25.42499999999999,"temp_median":83.02,"sampled_hours":314},{"month":"2025-12","active_hours_per_day":3.935483870967742,"light_median":4.0,"sound_p75":16.0,"temp_median":85.435,"sampled_hours":288},{"month":"2026-01","active_hours_per_day":0.0,"light_median":NaN,"sound_p75":NaN,"temp_median":NaN,"sampled_hours":0},{"month":"2026-02","active_hours_per_day":0.4642857142857143,"light_median":45.0,"sound_p75":25.799999999999997,"temp_median":77.74,"sampled_hours":22},{"month":"2026-03","active_hours_per_day":0.0,"light_median":NaN,"sound_p75":NaN,"temp_median":NaN,"sampled_hours":0},{"month":"2026-04","active_hours_per_day":0.0,"light_median":1.5,"sound_p75":8.7,"temp_median":86.43,"sampled_hours":1}],"pressure_monthly":[{"month":"2025-04","pressure":1000.52},{"month":"2025-05","pressure":996.93},{"month":"2025-06","pressure":997.175},{"month":"2025-07","pressure":998.245},{"month":"2025-08","pressure":1000.33},{"month":"2025-09","pressure":998.7025},{"month":"2025-10","pressure":1001.37},{"month":"2025-11","pressure":1002.415},{"month":"2025-12","pressure":1003.1975},{"month":"2026-02","pressure":999.825},{"month":"2026-04","pressure":998.98}],"pressure_corr":{"pressure":1.0,"temp":-0.4086601688424838,"humidity":-0.2548095062724172,"light":-0.22806301880609586,"sound":-0.05043383029224581},"monthly_coupling":[{"month":"2025-04","indoor_temp_f":84.565,"outdoor_temp_f":63.5,"indoor_pressure":1000.22,"outdoor_pressure":1018.8,"indoor_light":237.0,"precipitation_mm":41.9,"temp_delta_f":21.064999999999998,"pressure_gap_hpa":-18.579999999999927},{"month":"2025-05","indoor_temp_f":85.17,"outdoor_temp_f":66.92,"indoor_pressure":997.36,"outdoor_pressure":1014.0,"indoor_light":298.75,"precipitation_mm":172.9,"temp_delta_f":18.25,"pressure_gap_hpa":-16.639999999999986},{"month":"2025-06","indoor_temp_f":87.49,"outdoor_temp_f":75.65,"indoor_pressure":997.08,"outdoor_pressure":1016.25,"indoor_light":321.0,"precipitation_mm":182.8,"temp_delta_f":11.83999999999999,"pressure_gap_hpa":-19.16999999999996},{"month":"2025-07","indoor_temp_f":86.99,"outdoor_temp_f":80.33000000000001,"indoor_pressure":998.3225,"outdoor_pressure":1016.8,"indoor_light":108.5,"precipitation_mm":93.8,"temp_delta_f":6.659999999999982,"pressure_gap_hpa":-18.477499999999964},{"month":"2025-08","indoor_temp_f":87.1,"outdoor_temp_f":77.63,"indoor_pressure":999.945,"outdoor_pressure":1017.6,"indoor_light":106.25,"precipitation_mm":49.5,"temp_delta_f":9.469999999999999,"pressure_gap_hpa":-17.654999999999973},{"month":"2025-09","indoor_temp_f":86.07,"outdoor_temp_f":72.32,"indoor_pressure":998.595,"outdoor_pressure":1016.8,"indoor_light":48.0,"precipitation_mm":105.8,"temp_delta_f":13.75,"pressure_gap_hpa":-18.204999999999927},{"month":"2025-10","indoor_temp_f":82.76,"outdoor_temp_f":61.88,"indoor_pressure":1001.64,"outdoor_pressure":1019.1,"indoor_light":53.5,"precipitation_mm":94.6,"temp_delta_f":20.880000000000003,"pressure_gap_hpa":-17.460000000000036},{"month":"2025-11","indoor_temp_f":83.08,"outdoor_temp_f":52.879999999999995,"indoor_pressure":1001.395,"outdoor_pressure":1020.9,"indoor_light":116.0,"precipitation_mm":138.3,"temp_delta_f":30.200000000000003,"pressure_gap_hpa":-19.504999999999995},{"month":"2025-12","indoor_temp_f":85.435,"outdoor_temp_f":39.2,"indoor_pressure":1002.625,"outdoor_pressure":1020.6500000000001,"indoor_light":4.0,"precipitation_mm":73.9,"temp_delta_f":46.235,"pressure_gap_hpa":-18.02500000000009},{"month":"2026-01","indoor_temp_f":NaN,"outdoor_temp_f":33.89,"indoor_pressure":NaN,"outdoor_pressure":1021.9,"indoor_light":NaN,"precipitation_mm":85.6,"temp_delta_f":NaN,"pressure_gap_hpa":NaN},{"month":"2026-02","indoor_temp_f":77.74,"outdoor_temp_f":43.43,"indoor_pressure":999.845,"outdoor_pressure":1019.25,"indoor_light":45.0,"precipitation_mm":103.5,"temp_delta_f":34.309999999999995,"pressure_gap_hpa":-19.404999999999973},{"month":"2026-03","indoor_temp_f":NaN,"outdoor_temp_f":60.440000000000005,"indoor_pressure":NaN,"outdoor_pressure":1019.1,"indoor_light":NaN,"precipitation_mm":58.4,"temp_delta_f":NaN,"pressure_gap_hpa":NaN},{"month":"2026-04","indoor_temp_f":86.43,"outdoor_temp_f":67.64,"indoor_pressure":998.98,"outdoor_pressure":1021.4,"indoor_light":1.5,"precipitation_mm":35.3,"temp_delta_f":18.790000000000006,"pressure_gap_hpa":-22.41999999999996}],"weather_compare":{"merged_hours":9142,"indoor_outdoor_temp_corr":0.5251461931083558,"indoor_outdoor_pressure_corr":0.671214564443586,"pressure_gap_median_hpa":-18.424999999999955,"rainy_day_indoor_light_median":158.25,"dry_day_indoor_light_median":182.75,"rainy_day_indoor_sound_median":28.199999999999996,"dry_day_indoor_sound_median":18.0,"rainy_days":211,"dry_days":170},"outdoor_lag_profile":[{"lag_hours":-24,"correlation":0.44869860369618497},{"lag_hours":-22,"correlation":0.4676756394574529},{"lag_hours":-20,"correlation":0.47622491747590767},{"lag_hours":-18,"correlation":0.4739899479203047},{"lag_hours":-16,"correlation":0.46309337069226814},{"lag_hours":-14,"correlation":0.44769742044578065},{"lag_hours":-12,"correlation":0.43629629571111145},{"lag_hours":-10,"correlation":0.4294224504220073},{"lag_hours":-8,"correlation":0.4336868883637409},{"lag_hours":-6,"correlation":0.448491171087307},{"lag_hours":-4,"correlation":0.473616793940265},{"lag_hours":-2,"correlation":0.501147803786839},{"lag_hours":0,"correlation":0.525146193108365},{"lag_hours":2,"correlation":0.5406453410921193},{"lag_hours":4,"correlation":0.5461237494294076},{"lag_hours":6,"correlation":0.5368581070573084},{"lag_hours":8,"correlation":0.5204465024153868},{"lag_hours":10,"correlation":0.49930396715348424},{"lag_hours":12,"correlation":0.47922775784983923},{"lag_hours":14,"correlation":0.46697177531190026},{"lag_hours":16,"correlation":0.4620082898366336},{"lag_hours":18,"correlation":0.46904263936134594},{"lag_hours":20,"correlation":0.4826535391829658},{"lag_hours":22,"correlation":0.49789378436540227},{"lag_hours":24,"correlation":0.5113392136560669}]},"provenance":{"source_file":"2026-04-22-data-analysis/clue_full_history_20260422_214756.csv","weather_file":"2026-04-22-data-analysis/nashville_weather_20250407_20260423.json","source_rows":425650,"rows_after_timestamp_cleaning":425650,"date_range_utc":{"start":"2025-04-07T00:05:37.257313+00:00","end":"2026-04-23T02:48:08.125292+00:00"},"date_range_local":{"start":"2025-04-06T19:05:37.257313-05:00","end":"2026-04-22T21:48:08.125292-05:00"},"rows_with_any_null_sensor":220,"dropped_or_masked":{"invalid_gw_timestamp":0,"pressure_lt_900_hpa":1,"light_gt_70000_clear_counts":1,"corrupt_monotonic_non_numeric":1},"major_gaps":[{"local_ts":"2026-04-22 21:46:38.649291-05:00","gw_gap_s":5561624.133277,"gap_hours":1544.8955925769444},{"local_ts":"2026-02-16 14:09:14.430651-06:00","gw_gap_s":4300863.940014,"gap_hours":1194.6844277816667},{"local_ts":"2025-12-14 11:51:31.946420-06:00","gw_gap_s":2601251.49195,"gap_hours":722.569858875},{"local_ts":"2025-10-19 08:42:50.315101-05:00","gw_gap_s":677738.170194,"gap_hours":188.26060283166666},{"local_ts":"2025-06-23 19:56:43.664237-05:00","gw_gap_s":400572.318836,"gap_hours":111.27008856555555},{"local_ts":"2025-08-01 06:13:54.296761-05:00","gw_gap_s":288889.914837,"gap_hours":80.24719856583334},{"local_ts":"2025-09-15 20:17:27.223969-05:00","gw_gap_s":257796.493695,"gap_hours":71.6101371375},{"local_ts":"2025-06-26 22:42:29.320939-05:00","gw_gap_s":204907.222744,"gap_hours":56.91867298444444}],"device_reboots":[{"local_ts":"2025-04-11 10:27:09.467833-05:00","mono_gap_s":-401543.5},{"local_ts":"2025-05-17 09:41:19.703111-05:00","mono_gap_s":-2681563.0},{"local_ts":"2025-05-21 10:15:57.150332-05:00","mono_gap_s":-167634.6},{"local_ts":"2025-05-24 21:41:14.296069-05:00","mono_gap_s":-343602.55},{"local_ts":"2025-06-07 10:26:16.953877-05:00","mono_gap_s":-1077114.6},{"local_ts":"2025-06-23 19:56:43.664237-05:00","mono_gap_s":-561961.4},{"local_ts":"2025-06-26 22:42:29.320939-05:00","mono_gap_s":-23580.12},{"local_ts":"2025-07-06 19:39:43.114793-05:00","mono_gap_s":-487271.2},{"local_ts":"2025-07-22 12:22:18.761198-05:00","mono_gap_s":-1383972.16},{"local_ts":"2025-08-01 06:13:54.296761-05:00","mono_gap_s":-203439.0},{"local_ts":"2025-08-06 19:18:17.027790-05:00","mono_gap_s":-453371.6},{"local_ts":"2025-08-16 13:59:10.594181-05:00","mono_gap_s":-846550.55}]},"insights":{"seasonal_light":"The room's brightest moment moved by 4.3 hours across the observed months, from roughly 10:09 AM at the earliest to 2:30 PM at the latest.","activity_profile":"On active days, the midday pulse is obvious: median light reaches 2,008 clear counts and median sound 76 RMS, while quiet days stay far flatter.","heat_lag":"Temperature trails light rather than moving in lockstep: the strongest hourly correlation appears about 4 hours later (r=0.09), which is consistent with the room warming after it brightens.","color_modes":"The color sensor behaves less like a single dominant hue tracker and more like a regime detector: early months skew warm-and-dark, while autumn and winter show more neutral and cool episodes plus more clipped white readings.","discomfort":"Discomfort is mostly a tail event, not the everyday baseline: the median score stays near zero all day, but the 95th percentile rises highest around 5 PM when heat, dryness, and noise occasionally stack.","anomalies":"The strongest anomaly episodes are dominated by sensor extremes rather than subtle drift, with the top events driven by brightness saturation, loud spikes, unusually dry air, and in a few cases storm conditions outside.","routine":"The office routine changed regime at least twice: activity intensifies through summer, then drops sharply from October into December, with long collection outages afterward.","pressure":"Pressure mostly reads as weather backdrop here. Its strongest daily correlation is modest and negative with temperature (r=-0.41), and it has almost no daily relationship with sound (r=-0.05).","weather":"Outdoor weather explains some of the room's behavior much better than the raw indoor-only view did: indoor temperature tracks outdoor temperature strongly (r=0.53) and peaks about 4 hours later, while indoor pressure follows outdoor pressure with a stable offset of about -18.4 hPa."}};
+
+    const colors = {
+      amber: getCss('--amber'),
+      teal: getCss('--teal'),
+      rose: getCss('--rose'),
+      emerald: getCss('--emerald'),
+      cyan: getCss('--cyan'),
+      indigo: getCss('--indigo'),
+      purple: getCss('--purple'),
+      gray: getCss('--gray'),
+      orange: getCss('--orange'),
+      orangeSoft: getCss('--orange-soft'),
+      orangePale: getCss('--orange-pale'),
+      text: getCss('--text'),
+      muted: getCss('--muted'),
+      grid: getCss('--grid'),
+      panel: getCss('--panel-soft'),
+      bg: getCss('--bg')
+    };
+
+    function getCss(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function svgEl(tag, attrs = {}) {
+      const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      return node;
+    }
+
+    function fmt(value, digits = 1) {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'n/a';
+      return Number(value).toLocaleString(undefined, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      });
+    }
+
+    function fmtInt(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'n/a';
+      return Math.round(Number(value)).toLocaleString();
+    }
+
+    function hourLabel(hourValue) {
+      if (hourValue === null || hourValue === undefined || Number.isNaN(hourValue)) return 'n/a';
+      const hour = Math.floor(hourValue) % 24;
+      const minute = Math.round((hourValue - Math.floor(hourValue)) * 60) % 60;
+      const suffix = hour < 12 ? 'AM' : 'PM';
+      const hour12 = hour % 12 || 12;
+      return minute ? `${hour12}:${String(minute).padStart(2, '0')} ${suffix}` : `${hour12} ${suffix}`;
+    }
+
+    function monthLabel(monthStr) {
+      const [year, month] = monthStr.split('-').map(Number);
+      return new Date(year, month - 1, 1).toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+    }
+
+    function isoLocal(iso) {
+      return new Date(iso).toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric'
+      });
+    }
+
+    function scaleLinear(domainMin, domainMax, rangeMin, rangeMax) {
+      const span = domainMax - domainMin || 1;
+      return value => rangeMin + ((value - domainMin) / span) * (rangeMax - rangeMin);
+    }
+
+    function makeBaseSvg(width, height) {
+      return svgEl('svg', { viewBox: `0 0 ${width} ${height}`, width: '100%', height: '100%', role: 'img' });
+    }
+
+    function addText(svg, x, y, text, attrs = {}) {
+      const t = svgEl('text', Object.assign({
+        x, y,
+        fill: colors.muted,
+        'font-size': 11,
+        'font-family': 'system-ui, sans-serif'
+      }, attrs));
+      t.textContent = text;
+      svg.appendChild(t);
+      return t;
+    }
+
+    function drawAxes(svg, plot, xTicks, yTicks, xFormatter, yFormatter) {
+      const { x, y, w, h } = plot;
+      svg.appendChild(svgEl('line', { x1: x, y1: y + h, x2: x + w, y2: y + h, stroke: colors.grid }));
+      svg.appendChild(svgEl('line', { x1: x, y1: y, x2: x, y2: y + h, stroke: colors.grid }));
+      xTicks.forEach(tick => {
+        const px = plot.xScale(tick);
+        svg.appendChild(svgEl('line', { x1: px, y1: y + h, x2: px, y2: y + h + 5, stroke: colors.grid }));
+        addText(svg, px, y + h + 18, xFormatter(tick), { 'text-anchor': 'middle' });
+      });
+      yTicks.forEach(tick => {
+        const py = plot.yScale(tick);
+        svg.appendChild(svgEl('line', { x1: x, y1: py, x2: x + w, y2: py, stroke: 'rgba(255,255,255,0.08)' }));
+        addText(svg, x - 10, py + 4, yFormatter(tick), { 'text-anchor': 'end' });
+      });
+    }
+
+    function drawLineChart(container, series, opts) {
+      const width = opts.width || 900;
+      const height = opts.height || 280;
+      const margin = Object.assign({ top: 16, right: 24, bottom: 34, left: 48 }, opts.margin || {});
+      const svg = makeBaseSvg(width, height);
+      const plot = {
+        x: margin.left,
+        y: margin.top,
+        w: width - margin.left - margin.right,
+        h: height - margin.top - margin.bottom
+      };
+      const xVals = series.flatMap(line => line.data.map(d => d.x)).filter(v => v !== null && v !== undefined);
+      const yVals = series.flatMap(line => line.data.map(d => d.y)).filter(v => v !== null && v !== undefined);
+      plot.xScale = scaleLinear(Math.min(...xVals), Math.max(...xVals), plot.x, plot.x + plot.w);
+      plot.yScale = scaleLinear(Math.min(...yVals), Math.max(...yVals), plot.y + plot.h, plot.y);
+      drawAxes(svg, plot, opts.xTicks, opts.yTicks, opts.xFormatter, opts.yFormatter);
+      series.forEach(line => {
+        const path = [];
+        line.data.forEach((point, idx) => {
+          if (point.y === null || point.y === undefined || Number.isNaN(point.y)) return;
+          const cmd = idx === 0 || path.length === 0 ? 'M' : 'L';
+          path.push(`${cmd}${plot.xScale(point.x)},${plot.yScale(point.y)}`);
+        });
+        svg.appendChild(svgEl('path', {
+          d: path.join(' '),
+          fill: 'none',
+          stroke: line.color,
+          'stroke-width': line.strokeWidth || 2.5,
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round'
+        }));
+      });
+      if (opts.legend) {
+        let lx = plot.x;
+        const ly = 16;
+        opts.legend.forEach(item => {
+          svg.appendChild(svgEl('line', { x1: lx, y1: ly, x2: lx + 18, y2: ly, stroke: item.color, 'stroke-width': 3 }));
+          addText(svg, lx + 24, ly + 4, item.label, { fill: colors.muted });
+          lx += item.label.length * 7 + 52;
+        });
+      }
+      container.appendChild(svg);
+    }
+
+    function drawBarChart(container, dataRows, opts) {
+      const width = opts.width || 900;
+      const height = opts.height || 280;
+      const margin = Object.assign({ top: 16, right: 16, bottom: 42, left: 48 }, opts.margin || {});
+      const svg = makeBaseSvg(width, height);
+      const plot = {
+        x: margin.left,
+        y: margin.top,
+        w: width - margin.left - margin.right,
+        h: height - margin.top - margin.bottom
+      };
+      const maxY = Math.max(...dataRows.map(d => d.value));
+      const barWidth = plot.w / dataRows.length;
+      const yScale = scaleLinear(0, maxY, plot.y + plot.h, plot.y);
+      [0, maxY * 0.25, maxY * 0.5, maxY * 0.75, maxY].forEach(tick => {
+        const py = yScale(tick);
+        svg.appendChild(svgEl('line', { x1: plot.x, y1: py, x2: plot.x + plot.w, y2: py, stroke: 'rgba(255,255,255,0.08)' }));
+        addText(svg, plot.x - 8, py + 4, opts.yFormatter(tick), { 'text-anchor': 'end' });
+      });
+      dataRows.forEach((row, idx) => {
+        const x = plot.x + idx * barWidth + barWidth * 0.14;
+        const y = yScale(row.value);
+        const h = plot.y + plot.h - y;
+        svg.appendChild(svgEl('rect', {
+          x, y,
+          width: barWidth * 0.72,
+          height: h,
+          rx: 2,
+          fill: row.color || opts.color
+        }));
+        addText(svg, x + barWidth * 0.36, plot.y + plot.h + 18, opts.xFormatter(row.label), {
+          'text-anchor': 'middle'
+        });
+      });
+      container.appendChild(svg);
+    }
+
+    function drawStackedBarChart(container, rows, opts) {
+      const width = opts.width || 900;
+      const height = opts.height || 280;
+      const margin = Object.assign({ top: 20, right: 18, bottom: 42, left: 18 }, opts.margin || {});
+      const svg = makeBaseSvg(width, height);
+      const plot = {
+        x: margin.left,
+        y: margin.top,
+        w: width - margin.left - margin.right,
+        h: height - margin.top - margin.bottom
+      };
+      const barWidth = plot.w / rows.length;
+      rows.forEach((row, idx) => {
+        let yCursor = plot.y + plot.h;
+        opts.keys.forEach(key => {
+          const value = row[key];
+          const h = plot.h * value;
+          yCursor -= h;
+          svg.appendChild(svgEl('rect', {
+            x: plot.x + idx * barWidth + barWidth * 0.18,
+            y: yCursor,
+            width: barWidth * 0.64,
+            height: h,
+            fill: opts.colors[key]
+          }));
+        });
+        svg.appendChild(svgEl('rect', {
+          x: plot.x + idx * barWidth + barWidth * 0.18,
+          y: plot.y,
+          width: barWidth * 0.64,
+          height: plot.h,
+          fill: 'none',
+          stroke: 'rgba(255,255,255,0.08)'
+        }));
+        addText(svg, plot.x + idx * barWidth + barWidth * 0.5, plot.y + plot.h + 18, monthLabel(row.month), {
+          'text-anchor': 'middle'
+        });
+        svg.appendChild(svgEl('rect', {
+          x: plot.x + idx * barWidth + barWidth * 0.26,
+          y: plot.y + plot.h + 24,
+          width: barWidth * 0.48,
+          height: 8,
+          fill: row.dominant_color
+        }));
+      });
+      const legendY = 14;
+      let legendX = plot.x;
+      opts.keys.forEach(key => {
+        svg.appendChild(svgEl('rect', { x: legendX, y: legendY - 9, width: 14, height: 14, fill: opts.colors[key] }));
+        addText(svg, legendX + 20, legendY + 2, key.replace('_share', ''), { fill: colors.muted });
+        legendX += 88;
+      });
+      container.appendChild(svg);
+    }
+
+    function drawScatterTimeline(container, rows, opts) {
+      const width = opts.width || 900;
+      const height = opts.height || 280;
+      const margin = Object.assign({ top: 16, right: 18, bottom: 40, left: 40 }, opts.margin || {});
+      const svg = makeBaseSvg(width, height);
+      const plot = {
+        x: margin.left,
+        y: margin.top,
+        w: width - margin.left - margin.right,
+        h: height - margin.top - margin.bottom
+      };
+      const xs = rows.map(r => new Date(r.start).getTime());
+      const ys = rows.map(r => r.score);
+      const xScale = scaleLinear(Math.min(...xs), Math.max(...xs), plot.x, plot.x + plot.w);
+      const yScale = scaleLinear(0, Math.max(...ys) * 1.1, plot.y + plot.h, plot.y);
+      [0, 0.25, 0.5, 0.75, 1].forEach(part => {
+        const tickValue = Math.max(...ys) * part;
+        const py = yScale(tickValue);
+        svg.appendChild(svgEl('line', { x1: plot.x, y1: py, x2: plot.x + plot.w, y2: py, stroke: 'rgba(255,255,255,0.08)' }));
+        addText(svg, plot.x - 8, py + 4, fmt(tickValue, 0), { 'text-anchor': 'end' });
+      });
+      rows.forEach(row => {
+        const cx = xScale(new Date(row.start).getTime());
+        const cy = yScale(row.score);
+        const r = 4 + Math.min(16, row.duration_h * 2);
+        svg.appendChild(svgEl('circle', { cx, cy, r, fill: opts.color, opacity: 0.82 }));
+      });
+      rows.forEach((row, idx) => {
+        if (idx > 4) return;
+        const cx = xScale(new Date(row.start).getTime());
+        const cy = yScale(row.score);
+        addText(svg, cx + 8, cy - 8, row.label, { fill: colors.text });
+      });
+      const tickTimes = [0, 0.25, 0.5, 0.75, 1].map(part => Math.min(...xs) + (Math.max(...xs) - Math.min(...xs)) * part);
+      tickTimes.forEach(ms => {
+        addText(svg, xScale(ms), plot.y + plot.h + 18, new Date(ms).toLocaleDateString(undefined, { month: 'short', year: '2-digit' }), {
+          'text-anchor': 'middle'
+        });
+      });
+      container.appendChild(svg);
+    }
+
+    function drawPressureLine(container, rows) {
+      const series = [{
+        color: colors.indigo,
+        data: rows.map(row => ({
+          x: new Date(row.month + '-01').getTime(),
+          y: row.pressure
+        }))
+      }];
+      const ticks = rows.map(row => new Date(row.month + '-01').getTime());
+      drawLineChart(container, series, {
+        width: 900,
+        height: 260,
+        xTicks: ticks,
+        yTicks: [990, 995, 1000, 1005, 1010, 1015],
+        xFormatter: value => monthLabel(new Date(value).toISOString().slice(0, 7)),
+        yFormatter: value => fmt(value, 0) + ' hPa'
+      });
+    }
+
+    function buildSection(index, title, question, finding, methodText, renderViz) {
+      const section = el('section', 'section');
+      const meta = el('div', 'section-meta');
+      meta.appendChild(el('div', 'section-index', index));
+      meta.appendChild(el('h2', '', title));
+      meta.appendChild(el('p', '', question));
+      section.appendChild(meta);
+      const vizWrap = el('div', 'viz-wrap');
+      const viz = el('div', 'viz');
+      renderViz(viz);
+      vizWrap.appendChild(viz);
+      vizWrap.appendChild(el('p', 'finding', finding));
+      vizWrap.appendChild(el('p', 'method', methodText));
+      section.appendChild(vizWrap);
+      return section;
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      const hero = el('section', 'hero');
+      const left = el('div', 'headline-card');
+      left.appendChild(el('div', 'eyebrow', 'Quantified Self Environmental Archive'));
+      left.appendChild(el('h1', '', data.meta.title));
+      left.appendChild(el('p', 'subtitle', data.meta.subtitle));
+      hero.appendChild(left);
+      const right = el('div', 'headline-card');
+      const stat = el('div', 'headline-stat');
+      stat.innerHTML = `${fmt(data.meta.headline_value, 1)}<span class="headline-unit">${data.meta.headline_unit}</span>`;
+      right.appendChild(stat);
+      right.appendChild(el('div', 'headline-label', data.meta.headline_label));
+      hero.appendChild(right);
+      app.appendChild(hero);
+
+      const kpis = el('div', 'kpi-strip');
+      data.meta.kpis.forEach(kpi => {
+        const card = el('div', 'kpi');
+        card.appendChild(el('div', 'kpi-label', kpi.label));
+        card.appendChild(el('div', 'kpi-value', fmt(kpi.value, kpi.unit === 'seconds' ? 1 : 0)));
+        card.appendChild(el('div', 'kpi-unit', kpi.unit));
+        kpis.appendChild(card);
+      });
+      app.appendChild(kpis);
+
+      app.appendChild(buildSection(
+        '01',
+        'Seasonal Light',
+        'How does the office light signature move across the year?',
+        data.insights.seasonal_light,
+        'Aggregation: per local day with at least 50 samples and meaningful brightness, take the brightest moment and the span covered by that day\'s top 10% light readings; summarize by month. Light is APDS9960 clear-channel counts, not lux.',
+        viz => {
+          drawLineChart(viz, [
+            {
+              color: colors.amber,
+              data: data.sections.seasonal_light.map(row => ({
+                x: new Date(row.month + '-01').getTime(),
+                y: row.peak_hour
+              }))
+            },
+            {
+              color: colors.cyan,
+              data: data.sections.seasonal_light.map(row => ({
+                x: new Date(row.month + '-01').getTime(),
+                y: row.bright_span_h + 7
+              }))
+            }
+          ], {
+            width: 900,
+            height: 300,
+            xTicks: data.sections.seasonal_light.map(row => new Date(row.month + '-01').getTime()),
+            yTicks: [8, 10, 12, 14, 16],
+            xFormatter: value => monthLabel(new Date(value).toISOString().slice(0, 7)),
+            yFormatter: value => hourLabel(value),
+            legend: [
+              { label: 'Median brightest hour', color: colors.amber },
+              { label: 'Bright-window span, offset upward', color: colors.cyan }
+            ]
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '02',
+        'Office Pulse',
+        'What does a typical active day feel like compared with a quiet one?',
+        data.insights.activity_profile,
+        `Aggregation: classify days by the mean percentile rank of daily light and sound (top quartile = active, bottom quartile = quiet), then plot hourly medians within each class. Active days: ${data.sections.activity_class_counts.active || 0}. Quiet days: ${data.sections.activity_class_counts.quiet || 0}.`,
+        viz => {
+          drawLineChart(viz, [
+            {
+              color: colors.emerald,
+              data: data.sections.activity_profile.map(row => ({ x: row.hour, y: row.active_light }))
+            },
+            {
+              color: colors.gray,
+              data: data.sections.activity_profile.map(row => ({ x: row.hour, y: row.quiet_light }))
+            },
+            {
+              color: colors.teal,
+              data: data.sections.activity_profile.map(row => ({ x: row.hour, y: row.active_sound * 20 }))
+            },
+            {
+              color: colors.rose,
+              data: data.sections.activity_profile.map(row => ({ x: row.hour, y: row.quiet_sound * 20 }))
+            }
+          ], {
+            width: 900,
+            height: 300,
+            xTicks: [0, 4, 8, 12, 16, 20, 23],
+            yTicks: [0, 500, 1000, 1500, 2000],
+            xFormatter: value => hourLabel(value),
+            yFormatter: value => fmt(value, 0),
+            legend: [
+              { label: 'Active-day light', color: colors.emerald },
+              { label: 'Quiet-day light', color: colors.gray },
+              { label: 'Active-day sound x20', color: colors.teal },
+              { label: 'Quiet-day sound x20', color: colors.rose }
+            ]
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '03',
+        'Heat Lag',
+        'Does the room warm after it brightens, and how long does that lag seem to be?',
+        data.insights.heat_lag,
+        'Aggregation: resample to 1-hour local bins, compare median light to median temperature at lags from -12 to +12 hours, and plot the resulting correlation profile. Positive lag means temperature follows light later.',
+        viz => {
+          drawBarChart(viz, data.sections.lag_profile.map(row => ({
+            label: row.lag_hours,
+            value: Math.max(0, row.correlation || 0),
+            color: row.lag_hours >= 0 ? colors.orange : colors.gray
+          })), {
+            width: 900,
+            height: 280,
+            xFormatter: value => `${value}h`,
+            yFormatter: value => fmt(value, 2),
+            color: colors.orange
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '04',
+        'Color Regimes',
+        'Are there distinct lighting regimes over time rather than one stable room color?',
+        data.insights.color_modes,
+        'Aggregation: classify each valid hex color as dark, warm, cool, or neutral using brightness and red-vs-blue balance, then compute monthly shares. The thin strip under each month is the mean of that month\'s first 200 valid colors.',
+        viz => {
+          drawStackedBarChart(viz, data.sections.color_modes, {
+            width: 900,
+            height: 320,
+            keys: ['dark_share', 'warm_share', 'neutral_share', 'cool_share'],
+            colors: {
+              dark_share: colors.gray,
+              warm_share: colors.orange,
+              neutral_share: colors.orangePale,
+              cool_share: colors.cyan
+            }
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '05',
+        'Stress Windows',
+        'When does the room become least comfortable if we only count obvious heat, dryness, and noise stressors?',
+        data.insights.discomfort,
+        'Aggregation: discomfort = max(temp - 88 F, 0) * 0.5 + max(22 - humidity, 0) + max(sound - 120, 0) * 0.03, summarized by local hour using the 95th percentile. This is an engineering heuristic, not a physiological index.',
+        viz => {
+          drawLineChart(viz, [
+            {
+              color: colors.rose,
+              data: data.sections.discomfort_by_hour.map(row => ({ x: row.hour, y: row.discomfort_p95 }))
+            }
+          ], {
+            width: 900,
+            height: 280,
+            xTicks: [0, 4, 8, 12, 16, 20, 23],
+            yTicks: [0, 1, 2, 3, 4],
+            xFormatter: value => hourLabel(value),
+            yFormatter: value => fmt(value, 1)
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '06',
+        'Anomaly Episodes',
+        'Which moments were genuinely strange rather than just slightly above average?',
+        data.insights.anomalies,
+        'Aggregation: resample to 1-hour bins, compute robust z-scores for temperature, humidity, pressure, light, and sound, sum the absolute values, then merge adjacent extreme hours into episodes.',
+        viz => {
+          drawScatterTimeline(viz, data.sections.anomaly_events, { color: colors.rose });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '07',
+        'Routine Shifts',
+        'Did the office routine itself change over the year?',
+        data.insights.routine,
+        'Aggregation: by month, estimate active hours per day from hourly bins where median light exceeds 300 clear counts or upper-quartile sound exceeds 20 RMS, then track median light, sound, and temperature context.',
+        viz => {
+          drawLineChart(viz, [
+            {
+              color: colors.emerald,
+              data: data.sections.routine.map(row => ({
+                x: new Date(row.month + '-01').getTime(),
+                y: row.active_hours_per_day
+              }))
+            }
+          ], {
+            width: 900,
+            height: 280,
+            xTicks: data.sections.routine.map(row => new Date(row.month + '-01').getTime()),
+            yTicks: [0, 4, 8, 12, 16, 20],
+            xFormatter: value => monthLabel(new Date(value).toISOString().slice(0, 7)),
+            yFormatter: value => fmt(value, 0) + ' h'
+          });
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '08',
+        'Pressure Context',
+        'Is barometric pressure telling us anything beyond slow background weather drift?',
+        data.insights.pressure,
+        'Aggregation: daily median pressure by month plus daily correlation checks against temperature, humidity, light, and sound. Pressure is useful here mostly as context, not as an explanation for occupancy-like behavior.',
+        viz => {
+          drawPressureLine(viz, data.sections.pressure_monthly);
+          const pills = el('div', 'pill-row');
+          Object.entries(data.sections.pressure_corr).forEach(([key, value]) => {
+            if (key === 'pressure') return;
+            pills.appendChild(el('div', 'pill', `${key} r=${fmt(value, 2)}`));
+          });
+          viz.appendChild(pills);
+        }
+      ));
+
+      app.appendChild(buildSection(
+        '09',
+        'Weather Coupling',
+        'What does the outdoor weather actually explain about the room, and what stays stubbornly indoor?',
+        data.insights.weather,
+        'Aggregation: join hourly indoor rollups to hourly Nashville weather, then compare monthly indoor and outdoor median temperature, daily rainy-vs-dry medians, and hourly lag correlation. Outdoor temperature is in degrees Fahrenheit converted from the source Celsius feed; outdoor pressure is mean sea level pressure in hPa.',
+        viz => {
+          drawLineChart(viz, [
+            {
+              color: colors.orange,
+              data: data.sections.monthly_coupling.map(row => ({
+                x: new Date(row.month + '-01').getTime(),
+                y: row.indoor_temp_f
+              }))
+            },
+            {
+              color: colors.cyan,
+              data: data.sections.monthly_coupling.map(row => ({
+                x: new Date(row.month + '-01').getTime(),
+                y: row.outdoor_temp_f
+              }))
+            }
+          ], {
+            width: 900,
+            height: 280,
+            xTicks: data.sections.monthly_coupling.map(row => new Date(row.month + '-01').getTime()),
+            yTicks: [20, 40, 60, 80, 100],
+            xFormatter: value => monthLabel(new Date(value).toISOString().slice(0, 7)),
+            yFormatter: value => fmt(value, 0) + ' F',
+            legend: [
+              { label: 'Indoor median', color: colors.orange },
+              { label: 'Outdoor median', color: colors.cyan }
+            ]
+          });
+          const pills = el('div', 'pill-row');
+          pills.appendChild(el('div', 'pill', `temp r=${fmt(data.sections.weather_compare.indoor_outdoor_temp_corr, 2)}`));
+          pills.appendChild(el('div', 'pill', `pressure r=${fmt(data.sections.weather_compare.indoor_outdoor_pressure_corr, 2)}`));
+          pills.appendChild(el('div', 'pill', `pressure gap ${fmt(data.sections.weather_compare.pressure_gap_median_hpa, 1)} hPa`));
+          pills.appendChild(el('div', 'pill', `rainy-day light ${fmt(data.sections.weather_compare.rainy_day_indoor_light_median, 0)} vs dry ${fmt(data.sections.weather_compare.dry_day_indoor_light_median, 0)}`));
+          pills.appendChild(el('div', 'pill', `rainy-day sound ${fmt(data.sections.weather_compare.rainy_day_indoor_sound_median, 0)} vs dry ${fmt(data.sections.weather_compare.dry_day_indoor_sound_median, 0)}`));
+          viz.appendChild(pills);
+        }
+      ));
+
+      const footer = el('section', 'footer');
+      footer.appendChild(el('div', 'eyebrow', 'Provenance'));
+      footer.appendChild(el('p', '', `Sources: ${data.provenance.source_file}${data.provenance.weather_file ? ' and ' + data.provenance.weather_file : ''}. Rows after timestamp cleaning: ${fmtInt(data.provenance.rows_after_timestamp_cleaning)}. UTC range: ${data.provenance.date_range_utc.start} to ${data.provenance.date_range_utc.end}.`));
+      const grid = el('div', 'footer-grid');
+
+      const leftCard = el('div', 'footer-card');
+      leftCard.appendChild(el('h3', '', 'Cleaning'));
+      const cleanList = el('ul', '');
+      Object.entries(data.provenance.dropped_or_masked).forEach(([key, value]) => {
+        const li = el('li', '', `${key.replaceAll('_', ' ')}: ${fmtInt(value)}`);
+        cleanList.appendChild(li);
+      });
+      leftCard.appendChild(cleanList);
+      grid.appendChild(leftCard);
+
+      const rightCard = el('div', 'footer-card');
+      rightCard.appendChild(el('h3', '', 'Largest Gaps'));
+      const gapTable = el('table', 'table');
+      gapTable.innerHTML = '<thead><tr><th>Restart / gap</th><th>When</th><th>Duration</th></tr></thead>';
+      const gapBody = el('tbody', '');
+      data.provenance.major_gaps.slice(0, 6).forEach((row, idx) => {
+        const tr = el('tr', '');
+        tr.innerHTML = `<td>${idx + 1}</td><td class="mono">${row.local_ts}</td><td>${fmt(row.gap_hours, 1)} hours</td>`;
+        gapBody.appendChild(tr);
+      });
+      gapTable.appendChild(gapBody);
+      rightCard.appendChild(gapTable);
+      grid.appendChild(rightCard);
+
+      const schemaCard = el('div', 'footer-card');
+      schemaCard.appendChild(el('h3', '', 'Schema'));
+      const schemaTable = el('table', 'table');
+      schemaTable.innerHTML = '<thead><tr><th>Field</th><th>Type</th><th>Null %</th><th>Range / notes</th></tr></thead>';
+      const schemaBody = el('tbody', '');
+      data.schema.forEach(row => {
+        const range = row.type === 'numeric'
+          ? `${fmt(row.min, 1)} to ${fmt(row.max, 1)}`
+          : row.type === 'datetime'
+            ? `${row.date_min.slice(0, 10)} to ${row.date_max.slice(0, 10)}`
+            : `${row.unique_nonnull.toLocaleString()} unique`;
+        const tr = el('tr', '');
+        tr.innerHTML = `<td class="mono">${row.name}</td><td>${row.type}</td><td>${fmt(row.null_rate, 3)}</td><td>${range}</td>`;
+        schemaBody.appendChild(tr);
+      });
+      schemaTable.appendChild(schemaBody);
+      grid.appendChild(schemaCard);
+
+      const anomalyCard = el('div', 'footer-card');
+      anomalyCard.appendChild(el('h3', '', 'Top Episodes'));
+      const anomalyTable = el('table', 'table');
+      anomalyTable.innerHTML = '<thead><tr><th>When</th><th>Score</th><th>Why it stands out</th></tr></thead>';
+      const anomalyBody = el('tbody', '');
+      data.sections.anomaly_events.slice(0, 6).forEach(row => {
+        const tr = el('tr', '');
+        tr.innerHTML = `<td>${isoLocal(row.start)}</td><td>${fmt(row.score, 0)}</td><td>${row.label}</td>`;
+        anomalyBody.appendChild(tr);
+      });
+      anomalyTable.appendChild(anomalyBody);
+      anomalyCard.appendChild(anomalyTable);
+      grid.appendChild(anomalyCard);
+
+      footer.appendChild(grid);
+      app.appendChild(footer);
+    }
+
+    render();
+  </script>
+</body>
+</html>
